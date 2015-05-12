@@ -1,0 +1,52 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+	<title>Slyvix Night Out</title>
+    <link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+    game.load.image('hallway', 'images/hallway.png');
+    game.load.image('ground', 'images/platform_metal.png');
+    game.load.spritesheet('cat', 'images/cat_fighter_sprite1.png', 50, 50);
+}
+
+function create() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.add.sprite(0, 0, 'hallway');
+    platforms = game.add.group();
+    platforms.enableBody = true;
+    var ground = platforms.create(0, game.world.height - 64, 'ground');
+    ground.scale.setTo(2, 2);
+    ground.body.immovable = true;
+    //adds cat fighter
+    player = game.add.sprite(32, game.world.height - 150, 'cat');
+    
+    //player animations
+    player.animations.add('idle', [20,21,22,23,24,25,26,27,28,29], 10, true);
+}
+
+function update() {
+    
+    //if(player.animations.stop()){
+      //player.frame = 1;
+        player.animations.play('idle');
+    //}
+}
+
+</script>
+
+</body>
+</html>
