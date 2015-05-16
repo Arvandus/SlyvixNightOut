@@ -15,12 +15,21 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+//phaser game
+var game = new Phaser.Game(600, 400, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    
+//text code
+
+
 
 function preload() {
-    game.load.image('hallway', 'images/hallway.png');
-    game.load.image('ground', 'images/platform_metal.png');
+    game.load.image('hallway', 'images/hallway2.png');
+    game.load.image('ground', 'images/platform_metal5.png');
     game.load.spritesheet('cat', 'images/cat_fighter_sprite1.png', 50, 50);
+    //Buttons
+    game.load.image('Fight', 'images/Fight_Button.png');
+    game.load.image('Psych', 'images/Psych_Button.png');
+    game.load.image('Dakka', 'images/Stealth_Button.png');
 }
 
 function create() {
@@ -28,14 +37,36 @@ function create() {
     game.add.sprite(0, 0, 'hallway');
     platforms = game.add.group();
     platforms.enableBody = true;
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
-    ground.scale.setTo(2, 2);
+    var ground = platforms.create(0, game.world.height - 60, 'ground');
+    ground.scale.setTo(1, 1);
     ground.body.immovable = true;
     //adds cat fighter
-    player = game.add.sprite(32, game.world.height - 150, 'cat');
+    player = game.add.sprite(32, game.world.height - 60, 'cat');
+    player.scale.setTo(1.5, 1.5);
+    //Physics on player
+    game.physics.arcade.enable(player);
+    player.body.bounce.y = 0.2;
+    player.body.gravity.y = 300;
+    player.body.collideWorldBounds = true;
     
     //player animations
-    player.animations.add('idle', [20,21,22,23,24,25,26,27,28,29], 10, true);
+    player.animations.add('idle', [0,5,6,7], 10, true);
+    player.animations.add('AirUpperCut', [20,21,22,23,24,25,26,27,28,29], 10, true);
+
+//Text for screen
+var directions = "Slyvix casts CATS CLAWS. Its super effective";
+var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
+var text = game.add.text(game.world.centerX, game.world.centerY-100, directions, style);
+text.anchor.set(0.5);
+    
+      //Add Buttons
+    Fight = game.add.button(game.world.centerX - 95, game.world.centerY, 'Fight', FightEnemy, this, 2, 1, 0);
+    Fight.input.useHandCursor = true;
+    Psych = game.add.button(game.world.centerX, game.world.centerY, 'Psych', FightEnemy, this, 2, 1, 0);
+    Psych.input.useHandCursor = true;
+    Dakka = game.add.button(game.world.centerX + 95, game.world.centerY, 'Dakka', FightEnemy, this, 2, 1, 0);
+    Dakka.input.useHandCursor = true;
+    
 }
 
 function update() {
@@ -43,9 +74,15 @@ function update() {
     //if(player.animations.stop()){
       //player.frame = 1;
         player.animations.play('idle');
+        //player.animations.play('AirUpperCut');
     //}
+    
+    //  Collide the player and the stars with the platforms
+    game.physics.arcade.collide(player, platforms);
 }
 
+    function FightEnemy() {
+    }
 </script>
 
 </body>
