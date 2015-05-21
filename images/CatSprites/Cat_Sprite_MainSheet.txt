@@ -1,0 +1,3 @@
+cat2_base = 0 1025 1024 516
+cat_ar_base = 0 0 1024 1024
+Cat_Sprite_new = 1025 0 1024 1024

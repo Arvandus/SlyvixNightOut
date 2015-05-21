@@ -23,9 +23,15 @@ var game = new Phaser.Game(600, 400, Phaser.AUTO, '', { preload: preload, create
 
 
 function preload() {
+    //Enviorment Sprites
     game.load.image('hallway', 'images/hallway2.png');
-    game.load.image('ground', 'images/platform_metal5.png');
-    game.load.spritesheet('cat', 'images/cat_fighter_sprite1.png', 50, 50);
+    game.load.image('ground', 'images/platform_Metal5.png');
+    //Character Sprites
+    //Slyvix Sprite
+    game.load.spritesheet('cat', 'images/CatSprites/Cat_Sprite_MainSheet.png', 64, 64);
+    //game.load.spritesheet('cat', 'images/cat_fighter_sprite1.png', 50, 50);
+    //Enemy Sprites
+    game.load.spritesheet('MotherAlien','images/EnemySprites/Alien_Boss/AlienBossSheet.png', 601, 351)
     //Buttons
     game.load.image('Fight', 'images/Fight_Button.png');
     game.load.image('Psych', 'images/Psych_Button.png');
@@ -41,48 +47,181 @@ function create() {
     ground.scale.setTo(1, 1);
     ground.body.immovable = true;
     //adds cat fighter
-    player = game.add.sprite(32, game.world.height - 60, 'cat');
-    player.scale.setTo(1.5, 1.5);
+    player = game.add.sprite(32, game.world.height - 300, 'cat');
+    player.scale.setTo(2, 2);
+    //adds Alien Boss
+    AlienBoss = game.add.sprite(210, game.world.height - 10, 'MotherAlien');
+    AlienBoss.scale.setTo(.7,.7);
     //Physics on player
     game.physics.arcade.enable(player);
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
     
+    //Physics on AlienBoss
+    game.physics.arcade.enable(AlienBoss);
+    //AlienBoss.body.bounce.y = 0.2;
+    AlienBoss.body.gravity.y = 300;
+    AlienBoss.body.collideWorldBounds = true;
+    
     //player animations
-    player.animations.add('idle', [0,5,6,7], 10, true);
-    player.animations.add('AirUpperCut', [20,21,22,23,24,25,26,27,28,29], 10, true);
-
-//Text for screen
-var directions = "Slyvix casts CATS CLAWS. Its super effective";
-var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
-var text = game.add.text(game.world.centerX, game.world.centerY-100, directions, style);
-text.anchor.set(0.5);
+    player.animations.add('idle', game.math.numberArray(16,19), 10, true);
+    player.animations.add('UltimateAttack', game.math.numberArray(512,524), 10, false);
+    //Fight
+    player.animations.add('LowMidHighKick', [336,337,338,339,340,342,343,344,345,346,370,371,372.372], 10, false);
+    player.animations.add('SpinKickAttack', [241,242,243,244,245,246,112,113,114,115,116,117,118,119,120,121], 10, false);
+    player.animations.add('PunchUpperCut', [304,305,306,307,308,309,310,311,312,273,274,275,276,277,278,279,280,282,283,284], 10, false);
+    player.animations.add('ComboAttack', [432,433,434,435,436,437,438,439,400,401,402,403,404,405,406,407,405,404,400], 10, false);
+    player.animations.add('UpperPunchKick', [496,497,498,499,500,501,464,465,466,467,468,469,470,471,465,464], 10, false);
+    //Psych
+    player.animations.add('TwoShotUp', [576,577,578,579,580,581,582], 10, false);
+    player.animations.add('OneshotUp', [608,609,610,611,612,613], 10, false);
+    player.animations.add('JumpShot', [80,81,82,640,641,642,643,644,645], 10, false);
+    player.animations.add('JumpShotDown', [80,81,82,672,673,674,675,676,677], 10, false);
+    player.animations.add('TwoShotForward', [176,177,178,179,180,181,182], 10, false);
+    player.animations.add('OneShotForward', [208,209,210,211,212,213], 10, false);
+    //Dakka
+    player.animations.add('StandShot', [0,1,2,3,64,65,66,67,68,69,70,71,3,2,1,0], 10, false);
+    player.animations.add('WalkShot', [0,1,2,3,128,129.130,131,132,133,134,135,3,2,1,0], 10, false);
+    player.animations.add('SpinJumpShot', [0,1,2,3,224,225,226,227,196,197,196,197,3,2,1,0], 10, false);
+    player.animations.add('JumpGunShot', [0,1,2,3,160,161,162,163,196,197,196,197,166,167,168,169,3,2,1,0], 10, false);
+    
+    //Enemy animations
+    //AlienBoss.animations.add('doSomething',[0,1,2,3,4,5],10,true);
     
       //Add Buttons
     Fight = game.add.button(game.world.centerX - 95, game.world.centerY, 'Fight', FightEnemy, this, 2, 1, 0);
     Fight.input.useHandCursor = true;
-    Psych = game.add.button(game.world.centerX, game.world.centerY, 'Psych', FightEnemy, this, 2, 1, 0);
+    Psych = game.add.button(game.world.centerX, game.world.centerY, 'Psych', PsychEnemy, this, 2, 1, 0);
     Psych.input.useHandCursor = true;
-    Dakka = game.add.button(game.world.centerX + 95, game.world.centerY, 'Dakka', FightEnemy, this, 2, 1, 0);
+    Dakka = game.add.button(game.world.centerX + 95, game.world.centerY, 'Dakka', DakkaEnemy, this, 2, 1, 0);
     Dakka.input.useHandCursor = true;
     
-}
-
-function update() {
+    //animation trial
+    player.animations.play('idle');
+    AlienBoss.animations.play('doSomething');
     
-    //if(player.animations.stop()){
-      //player.frame = 1;
-        player.animations.play('idle');
-        //player.animations.play('AirUpperCut');
-    //}
+}
+    
+function arrayRoll(x){
+  var stuff = Math.floor(Math.random() * x);
+  return stuff;
+}
+    
+function TextUpdate(CombatType) {
+    var FightTextArray = ["punched the crap out of", "gave it the one two punch","Here is sometthing else to write"];
+    var PsychTextArray = ["Uses a psychic power","here is another magical power", "here is another Psychic power"];
+    var DakkaTextArray = ["Uses all the bullets, Uses evwn more Bullets, Goddamn all the bullets"];
+    if (CombatType == "fight"){
+        var words = FightTextArray[arrayRoll(FightTextArray.length)];
+    }
+    else if (CombatType == "psych"){
+        var words = PsychTextArray[arrayRoll(PsychTextArray.length)];
+    }
+    else {
+        var words = DakkaTextArray[arrayRoll(DakkaTextArray.length)];
+    }
+    var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
+    var text = game.add.text(game.world.centerX, game.world.centerY-100, words, style);
+    text.anchor.set(0.5);
+    }
+  
+//Ability Functions
+//------------------
+function FightEnemy() {
+       // var words = "Stuff said in a microphone.";
+        var Fword = "fight";
+        ChooseAnimation(Fword);
+        TextUpdate(Fword);
+}
+    
+function PsychEnemy() {
+        var Pword = "psych";
+        ChooseAnimation(Pword);
+        TextUpdate(Pword);
+}
+    
+function DakkaEnemy(){
+        var Dword = "dakka";
+        ChooseAnimation(Dword);
+        TextUpdate(Dword);
+    }
+//---------------
+
+//Choose Animations for combat
+function ChooseAnimation(CButton){
+    if (CButton === "fight" ){
+            var Fnum = Math.floor((Math.random() * 5) + 1);
+        switch (Fnum) {
+    case 1:
+        player.animations.play('LowMidHighKick');
+        break;
+    case 2:
+        player.animations.play('SpinKickAttack');
+        break;
+    case 3:
+        player.animations.play('PunchUpperCut');
+        break;
+    case 4:
+        player.animations.play('ComboAttack');
+        break;
+    case 5:
+        player.animations.play('UpperPunchKick');
+        break;
+        }
+    }
+    else if (CButton == "psych"){
+            var Fnum = Math.floor((Math.random() * 6) + 1);
+        switch (Fnum) {
+    case 1:
+        player.animations.play('TwoShotUp');
+        break;
+    case 2:
+        player.animations.play('OneshotUp');
+        break;
+    case 3:
+        player.animations.play('JumpShot');
+        break;
+    case 4:
+        player.animations.play('JumpShotDown');
+        break;
+    case 5:
+        player.animations.play('TwoShotForward');
+        break;
+    case 6:
+        player.animations.play('OneShotForward');
+        break;
+        }
+    }
+    
+    else if (CButton == "dakka"){
+            var Fnum = Math.floor((Math.random() * 4) + 1);
+        switch (Fnum) {
+    case 1:
+        player.animations.play('StandShot');
+        break;
+    case 2:
+        player.animations.play('WalkShot');
+        break;
+    case 3:
+        player.animations.play('SpinJumpShot');
+        break;
+    case 4:
+        player.animations.play('JumpGunShot');
+        break;
+        }
+    }
+    player.events.onAnimationComplete.add(function(){
+            player.animations.play('idle');
+    },this);
+}
+    
+function update() {
     
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms);
 }
-
-    function FightEnemy() {
-    }
+    
 </script>
 
 </body>
