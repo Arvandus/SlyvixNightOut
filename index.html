@@ -57,20 +57,17 @@ function create() {
     //adds cat fighter
     player = game.add.sprite(100, game.world.height - 168, 'cat');
     player.scale.setTo(2, 2);
+    //adds cat life bar
+    var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
+    var slyvixLife = game.add.text(game.world.centerX-300, game.world.centerY-100, slyvix.life.toString(), style);
+    slyvixLife.anchor.set(0.5);
     //adds Alien Boss
     AlienBoss = game.add.sprite(300, game.world.height - 360, 'MotherAlien');
     AlienBoss.scale.setTo(1,1);
-    //Physics on player
-    //game.physics.arcade.enable(player);
-    //player.body.bounce.y = 0.2;
-    //player.body.gravity.y = 300;
-    //player.body.collideWorldBounds = true;
-    
-    //Physics on AlienBoss
-    //game.physics.arcade.enable(AlienBoss);
-    //AlienBoss.body.bounce.y = 0.2;
-    //AlienBoss.body.gravity.y = 300;
-    //AlienBoss.body.collideWorldBounds = true;
+    //adds Alien Life bar
+    var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
+    var alienLife = game.add.text(game.world.centerX+300, game.world.centerY-100, enemy.life.toString(), style);
+    alienLife.anchor.set(0.5);
     
     //player animations
     player.animations.add('idle', game.math.numberArray(16,19), 10, true);
@@ -95,8 +92,8 @@ function create() {
     player.animations.add('JumpGunShot', [0,1,2,3,160,161,162,163,196,197,196,197,166,167,168,169,3,2,1,0], 10, false);
     
     //Enemy animations
-    AlienBoss.animations.add('doSomething',[5,11,10],6,true);
-    AlienBoss.animations.add('cast',[0,6,2,7],6,true);
+    AlienBoss.animations.add('idle',[5,11,10],6,true);
+    AlienBoss.animations.add('cast',[0,6,2,7,7,2,6,0],6,false);
     
       //Add Buttons
     Fight = game.add.button(game.world.centerX - 95, game.world.centerY, 'Fight', FightEnemy, this, 2, 1, 0);
@@ -108,12 +105,75 @@ function create() {
     
     //animation trial
     player.animations.play('idle');
-    AlienBoss.animations.play('doSomething');
+    AlienBoss.animations.play('idle');
     
 }
     
 //Main Comabt Function
 function RockPaperScissors(ActionTaken){
+    var alienChoice;
+    var RPSNum = Math.floor((Math.random() * 3) + 1);
+    switch (RPSNum) {
+    case 1:
+        alienChoice = "fight";
+        break;
+    case 2:
+        alienChoice = "psych";
+        break;
+    case 3:
+        alienChoice = "dakka";
+        break;
+    }
+    if (ActionTaken == alienChoice)
+    {
+        //nothing happens
+        slyvixLife.destroy();
+    }
+    else if ( ActionTaken == "fight" && alienChoice == "psych"){
+        //slyvix fight beat by alien psych
+        //slyvixLife.destroy();
+        //slyvix.life--;
+       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
+    //slyvixLife.anchor.set(0.5);
+        ChooseAnimation(ActionTaken);
+        alienFight(alienChoice);
+    }
+    else if ( ActionTaken == "fight" && alienChoice == "dakka"){
+        //slyvix fight beat alien dakka
+       //slyvixLife.destroy();
+        ChooseAnimation(Fword);
+        alienFight(alienChoice);
+    }
+    else if ( ActionTaken == 2 && RPSNum == 1){
+        //slyvix psych beat alien fight
+        //slyvixLife.destroy();
+        alienFight(alienChoice);
+        ChooseAnimation(ActionTaken);
+    }
+    else if ( ActionTaken == "psych" && alienChoice == "dakka"){
+        //slyvix psych beat by alien dakka
+        //slyvixLife.destroy();
+        //slyvix.life--;
+       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
+   // slyvixLife.anchor.set(0.5);
+        ChooseAnimation(ActionTaken);
+        alienFight(alienChoice);
+    }
+    else if ( ActionTaken == "dakka" && alienChoice == "fight"){
+        //slyvix dakka beat by alien fight
+        //slyvixLife.destroy();
+        //slyvix.life--;
+       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
+    //slyvixLife.anchor.set(0.5);
+        ChooseAnimation(ActionTaken);
+        alienFight(alienChoice);
+    }
+    else if ( ActionTaken == "dakka" && alienChoice == "psych"){
+        //slyvix dakka beat alien psych
+        //slyvixLife.destroy();
+        ChooseAnimation(ActionTaken);
+        alienFight(alienChoice);
+    }
 
 }
     
@@ -121,7 +181,8 @@ function arrayRoll(x){
   var stuff = Math.floor(Math.random() * x);
   return stuff;
 }
-    
+
+    //updates text for main center combat
 function TextUpdate(CombatType) {
     var FightTextArray = ["punched the crap out of", "gave it the one two punch","Here is sometthing else to write"];
     var PsychTextArray = ["Uses a psychic power","here is another magical power", "here is another Psychic power"];
@@ -149,25 +210,34 @@ function TextUpdate(CombatType) {
 function FightEnemy() {
        // var words = "Stuff said in a microphone.";
         var Fword = "fight";
-        ChooseAnimation(Fword);
-        TextUpdate(Fword);
+        //ChooseAnimation(Fword);
+        //TextUpdate(Fword);
+        RockPaperScissors(Fword);
+        //AlienBoss.animations.play('cast');
+        //AlienBoss.events.onAnimationComplete.add(function(){
+          //  AlienBoss.animations.play('idle');
+    //},this);
+        
 }
     
 function PsychEnemy() {
         var Pword = "psych";
-        ChooseAnimation(Pword);
-        TextUpdate(Pword);
+        //ChooseAnimation(Pword);
+        //TextUpdate(Pword);
+        RockPaperScissors(Pword);
 }
     
 function DakkaEnemy(){
         var Dword = "dakka";
-        ChooseAnimation(Dword);
-        TextUpdate(Dword);
+        //ChooseAnimation(Dword);
+        //TextUpdate(Dword);
+        RockPaperScissors(Dword);
     }
 //---------------
 
-//Choose Animations for combat
+//Choose SLyvix Animations for combat
 function ChooseAnimation(CButton){
+    TextUpdate(CButton);
     if (CButton === "fight" ){
             var Fnum = Math.floor((Math.random() * 5) + 1);
         switch (Fnum) {
@@ -233,6 +303,32 @@ function ChooseAnimation(CButton){
             player.animations.play('idle');
     },this);
 }
+    //----------------------------------------------
+    
+//Alien animations for combat
+    function alienFight(alienChoice){
+        if (alienChoice == "fight"){
+                    AlienBoss.animations.play('cast');
+        AlienBoss.events.onAnimationComplete.add(function(){
+            AlienBoss.animations.play('idle');
+    },this);
+        }
+        else if (alienChoice == "fight"){
+                    AlienBoss.animations.play('cast');
+        AlienBoss.events.onAnimationComplete.add(function(){
+            AlienBoss.animations.play('idle');
+    },this);
+        }
+        if (alienChoice == "fight"){
+                    AlienBoss.animations.play('cast');
+        AlienBoss.events.onAnimationComplete.add(function(){
+            AlienBoss.animations.play('idle');
+    },this);
+        }
+}
+    //fight is a rat attack
+    //psych is a flashy attack
+    //dakka is a marine attack. 
     
 function update() {
     
