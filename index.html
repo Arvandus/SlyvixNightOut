@@ -18,7 +18,15 @@
 //phaser game
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
     
-//text code
+//SLyvix and ALien Boss Objects
+//object determines Slyvix
+  var slyvix = {
+  life : 5
+  }
+//object determines enemies
+  var enemy = {
+  life : 5
+  }
 
 
 
@@ -104,6 +112,11 @@ function create() {
     
 }
     
+//Main Comabt Function
+function RockPaperScissors(ActionTaken){
+
+}
+    
 function arrayRoll(x){
   var stuff = Math.floor(Math.random() * x);
   return stuff;
@@ -127,7 +140,7 @@ function TextUpdate(CombatType) {
     message.anchor.set(0.5);
     //deletes old message
         player.events.onAnimationComplete.add(function(){
-         setTimeout(message.destroy(), 50000);
+         setTimeout(message.destroy(), 5000);
     },this);
     }
   
@@ -224,7 +237,7 @@ function ChooseAnimation(CButton){
 function update() {
     
     //  Collide the player and the stars with the platforms
-    game.physics.arcade.collide(player, platforms);
+   // game.physics.arcade.collide(player, platforms);
 }
     
 </script>
