@@ -16,7 +16,7 @@
 <script type="text/javascript">
 
 //phaser game
-var game = new Phaser.Game(600, 400, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
     
 //text code
 
@@ -24,8 +24,8 @@ var game = new Phaser.Game(600, 400, Phaser.AUTO, '', { preload: preload, create
 
 function preload() {
     //Enviorment Sprites
-    game.load.image('hallway', 'images/hallway2.png');
-    game.load.image('ground', 'images/platform_Metal5.png');
+    game.load.image('hallway', 'images/hallway.png');
+    game.load.image('ground', 'images/platform_Metal.png');
     //Character Sprites
     //Slyvix Sprite
     game.load.spritesheet('cat', 'images/CatSprites/Cat_Sprite_MainSheet.png', 64, 64);
@@ -47,11 +47,11 @@ function create() {
     ground.scale.setTo(1, 1);
     ground.body.immovable = true;
     //adds cat fighter
-    player = game.add.sprite(60, game.world.height - 168, 'cat');
+    player = game.add.sprite(100, game.world.height - 168, 'cat');
     player.scale.setTo(2, 2);
     //adds Alien Boss
-    AlienBoss = game.add.sprite(210, game.world.height - 270, 'MotherAlien');
-    AlienBoss.scale.setTo(.7,.7);
+    AlienBoss = game.add.sprite(300, game.world.height - 360, 'MotherAlien');
+    AlienBoss.scale.setTo(1,1);
     //Physics on player
     //game.physics.arcade.enable(player);
     //player.body.bounce.y = 0.2;
