@@ -123,8 +123,12 @@ function TextUpdate(CombatType) {
         var words = DakkaTextArray[arrayRoll(DakkaTextArray.length)];
     }
     var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
-    var text = game.add.text(game.world.centerX, game.world.centerY-100, words, style);
-    text.anchor.set(0.5);
+    var message = game.add.text(game.world.centerX, game.world.centerY-100, words, style);
+    message.anchor.set(0.5);
+    //deletes old message
+        player.events.onAnimationComplete.add(function(){
+         setTimeout(message.destroy(), 50000);
+    },this);
     }
   
 //Ability Functions
