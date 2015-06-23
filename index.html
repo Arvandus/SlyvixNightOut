@@ -21,12 +21,14 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 //SLyvix and ALien Boss Objects
 //object determines Slyvix
   var slyvix = {
-  life : 5
-  }
+  life : 5,
+  lifebar : []
+  };
 //object determines enemies
   var enemy = {
-  life : 5
-  }
+  life : 5,
+  lifebar : []
+  };
 
 
 
@@ -51,6 +53,13 @@ function preload() {
 }
 
 function create() {
+    //Include Logo
+     
+    
+    //End Logo
+    
+    
+    
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.sprite(0, 0, 'hallway');
     platforms = game.add.group();
@@ -160,10 +169,9 @@ function create() {
     Lifealien3.animations.play('idle');
     Lifealien4.animations.play('idle');
     Lifealien5.animations.play('idle');
-    
 }
     
-//Main Comabt Function
+//Main Combat Function
 function RockPaperScissors(ActionTaken){
     var alienChoice;
     var RPSNum = Math.floor((Math.random() * 3) + 1);
@@ -186,10 +194,9 @@ function RockPaperScissors(ActionTaken){
     }
     else if ( ActionTaken == "fight" && alienChoice == "psych"){
         //slyvix fight beat by alien psych
-        //slyvixLife.destroy();
-        //slyvix.life--;
-       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
-    //slyvixLife.anchor.set(0.5);
+        //remove one life
+        Lifecat2.destroy();
+        slyvixDecrease();
         ChooseAnimation(ActionTaken);
         alienFight(alienChoice);
         
@@ -197,41 +204,54 @@ function RockPaperScissors(ActionTaken){
     else if ( ActionTaken == "fight" && alienChoice == "dakka"){
         //slyvix fight beat alien dakka
        //slyvixLife.destroy();
+        alienDecrease();
         ChooseAnimation(ActionTaken);
         alienFight(alienChoice);
     }
     else if ( ActionTaken == "psych" && alienChoice == "fight"){
         //slyvix psych beat alien fight
         //slyvixLife.destroy();
+        alienDecrease();
         alienFight(alienChoice);
         ChooseAnimation(ActionTaken);
     }
     else if ( ActionTaken == "psych" && alienChoice == "dakka"){
         //slyvix psych beat by alien dakka
+        slyvixDecrease();
         //slyvixLife.destroy();
-        //slyvix.life--;
-       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
-   // slyvixLife.anchor.set(0.5);
         ChooseAnimation(ActionTaken);
         alienFight(alienChoice);
     }
     else if ( ActionTaken == "dakka" && alienChoice == "fight"){
         //slyvix dakka beat by alien fight
-        //slyvixLife.destroy();
-        //slyvix.life--;
-       // var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
-    //slyvixLife.anchor.set(0.5);
+        slyvixDecrease();
         ChooseAnimation(ActionTaken);
         alienFight(alienChoice);
     }
     else if ( ActionTaken == "dakka" && alienChoice == "psych"){
         //slyvix dakka beat alien psych
-        //slyvixLife.destroy();
         //animation trial  
+        alienDecrease();
         ChooseAnimation(ActionTaken);
         alienFight(alienChoice);
     }
 
+}
+    
+//slyvix hit function
+function slyvixDecrease(){
+       slyvix.life--;
+       var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 }; 
+       var slyvixLife = game.add.text(game.world.centerX-350, game.world.centerY-100, slyvix.life.toString(), style);
+       slyvixLife.anchor.set(0.5);
+}
+    
+//alien hit function
+function alienDecrease(){
+    enemy.life--;
+    var style = { font: "30px Arial", fill: "#ff0044", align: "center", wordWrap: true, wordWrapWidth: 350 };
+    var alienLife = game.add.text(game.world.centerX+300, game.world.centerY-100, enemy.life.toString(), style);
+    alienLife.anchor.set(0.5);
 }
     
 function arrayRoll(x){
@@ -274,11 +294,6 @@ function FightEnemy() {
         //ChooseAnimation(Fword);
         //TextUpdate(Fword);
         RockPaperScissors(Fword);
-        //AlienBoss.animations.play('cast');
-        //AlienBoss.events.onAnimationComplete.add(function(){
-          //  AlienBoss.animations.play('idle');
-    //},this);
-        
 }
     
 function PsychEnemy() {
@@ -391,7 +406,7 @@ function ChooseAnimation(CButton){
     GreenGuard.animations.add('moving', [16,15,14,13,12,11,10,9], 10, true);
     GreenGuard.animations.play('moving');
     game.physics.arcade.enable(GreenGuard);
-    GreenGuard.body.velocity.x = - 40;
+    GreenGuard.body.velocity.x = - 100;
            // while (GreenGuard.body.velocity.x >= 40)
          //  {
          //      GreenGuard.body.velocity.x = GreenGuard.body.velocity.x + 2;
